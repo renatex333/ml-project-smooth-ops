@@ -1,0 +1,12 @@
+--requirements--
+fastapi==0.114.0
+uvicorn==0.32.0
+pandas==2.2.2
+seaborn==0.13.2
+matplotlib.pyplot==3.9.2
+sklearn.ensemble==1.5.1
+sklearn.svm==1.5.1
+sklearn.linear_model==1.5.1
+sklearn.metrics==1.5.1
+sklearn.preprocessing==1.5.1
+sklearn.model_selection==1.5.1
