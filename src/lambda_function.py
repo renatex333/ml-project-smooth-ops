@@ -1,11 +1,11 @@
 import os
 import json
-import pickle
+import joblib
 import pandas as pd
 
 def loader(object_name: str):
     """
-    Function to load a model or encoder from the models folder
+    Function to load a model or scaler from the models folder
     """
     if not isinstance(object_name, str):
         raise ValueError("Object path is not a string")
@@ -13,7 +13,7 @@ def loader(object_name: str):
     object_path = f"{models_folder}/{object_name}.pkl"
     try:
         with open(object_path, "rb") as file:
-            return pickle.load(file)
+            return joblib.load(file)
     except FileNotFoundError:
         raise FileNotFoundError(f"Invalid object name. The object at {object_path} does not exist.")
 
@@ -32,11 +32,11 @@ def predict(event, context):
         body = json.loads(event["body"])
         
         model = loader("model")
-        encoder = loader("encoder")
+        scaler = loader("scaler")
 
-        df_person = pd.DataFrame([body])
-        person_t = encoder.transform(df_person)
-        pred = model.predict(person_t)[0]
+        df_wine = pd.DataFrame([body])
+        df_wine_transform = scaler.transform(df_wine)
+        pred = model.predict(df_wine_transform)[0]
     except json.JSONDecodeError as e:
         return {
             "message": "Invalid body in the request",

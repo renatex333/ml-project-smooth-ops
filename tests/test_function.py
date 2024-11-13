@@ -7,14 +7,17 @@ def load_valid_payload():
     Return a payload to test the function and the API.
     """
     payload = json.dumps({
-        "age": 42,
-        "job": "entrepreneur",
-        "marital": "married",
-        "education": "primary",
-        "balance": 558,
-        "housing": "yes",
-        "duration": 186,
-        "campaign": 2
+        "fixed acidity": 7.7,
+        "volatile acidity": 0.56,
+        "citric acid": 0.08,
+        "residual sugar": 2.5,
+        "chlorides": 0.114,
+        "free sulfur dioxide": 14.0,
+        "total sulfur dioxide": 46.0,
+        "density": 0.9971,
+        "pH": 3.24,
+        "sulphates": 0.66,
+        "alcohol": 9.6,
     })
     return payload
 
@@ -23,7 +26,7 @@ def load_invalid_payload():
     Return an invalid payload to test the function and the API.
     """
     payload = json.dumps({
-        "age": "42"
+        "fixed_acidity": 7.7,
     })
     return payload
 
@@ -34,7 +37,6 @@ def test_no_body_in_request():
     event = {}
 
     expected = {
-        "created_by": "Renatex",
         "message": "No body in the request",
         "error": "None",
         "prediction": "None"
@@ -90,7 +92,7 @@ def test_loader_valid_input():
     Tests the loader function with valid input
     """
     model = lambda_function.loader("model")
-    encoder = lambda_function.loader("encoder")
+    scaler = lambda_function.loader("scaler")
 
     assert model is not None, "Model is None. Should be a model."
-    assert encoder is not None, "Encoder is None. Should be an encoder."
+    assert scaler is not None, "Scaler is None. Should be an scaler."
