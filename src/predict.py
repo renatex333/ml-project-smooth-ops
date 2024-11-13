@@ -1,28 +1,46 @@
+import os
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
+import logging
 import joblib  
 from process import load_data  
+from sklearn.metrics import mean_squared_error
 
-def predict(file_path):
-    model = joblib.load("../models/model.pkl")  
+DATA_FOLDER = os.path.relpath("data", os.getcwd())
+MODEL_FOLDER = os.path.relpath("models", os.getcwd())
+LOGS_FOLDER = os.path.relpath("logs", os.getcwd())
+
+def predict():
+    model_file_path = os.path.join(MODEL_FOLDER, "model.pkl")
+    model = joblib.load(model_file_path)
+
+    scaler_file_path = os.path.join(MODEL_FOLDER, "scaler.pkl")
+    scaler = joblib.load(scaler_file_path)
+
+    data_path = os.path.join(DATA_FOLDER, "winequality-predict.csv")
+    data = load_data(data_path)
     
-    data = load_data("../data/winequality_predict.csv")
-    
-    X_to_predict = data.drop(columns=['quality'])  
-    
-    X = X_to_predict  
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)  
+    X = data.drop(columns=["quality"])
+    X_scaled = scaler.fit_transform(X)
 
     predictions = model.predict(X_scaled)
-    
-    results = pd.DataFrame({
+
+    comparison = pd.DataFrame({
+        "Actual Quality": data["quality"],
         "Predicted Quality": predictions
     })
-    
-    results.to_csv("predictions.csv", index=False)
-    print("Predictions saved to 'predictions.csv'.")
+
+    file_path = os.path.join(DATA_FOLDER, "predictions.csv")
+    comparison.to_csv(file_path, index=False)
+    logging.info(f"Comparison saved to '{file_path}'.")
 
 if __name__ == "__main__":
     
-    predict("../data/winequality_predict.csv")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)-18s %(name)-8s %(levelname)-8s %(message)s",
+        datefmt="%y-%m-%d %H:%M",
+        filename=os.path.join(LOGS_FOLDER, "predict.log"),
+        filemode="a",
+    )
+
+    predict()
