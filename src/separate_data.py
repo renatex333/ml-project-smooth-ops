@@ -17,11 +17,12 @@ def main():
     logging.info("Data separated into train and predict datasets.")
 
 if __name__ == "__main__":
+    script_name = os.path.splitext(os.path.basename(__file__))[0]
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)-18s %(name)-8s %(levelname)-8s %(message)s",
         datefmt="%y-%m-%d %H:%M",
-        filename=os.path.join(LOGS_FOLDER, "separate_data.log"),
-        filemode="a",
+        filename=os.path.join(LOGS_FOLDER, f"{script_name}.log"),
+        filemode="w",
     )
     main()

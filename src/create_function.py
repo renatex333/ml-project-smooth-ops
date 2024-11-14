@@ -6,7 +6,10 @@ import os
 import boto3
 import random
 import string
+import logging
 from dotenv import load_dotenv, set_key, unset_key
+
+LOGS_FOLDER = os.path.relpath("logs", os.getcwd())
 
 def main():
     load_dotenv()
@@ -28,11 +31,12 @@ def main():
 
     try:
         lambda_client.delete_function(FunctionName=function_name)
-        print("Existing Function was Deleted!")
+        logging.info("Existing Function was Deleted!")
         unset_key(".env", "FUNCTION_ARN")
     except lambda_client.exceptions.ResourceNotFoundException:
-        print("Function does not exist.")
+        logging.warning("Function does not exist.")
 
+    logging.info(f"Creating Lambda Function: {function_name}")
     response = lambda_client.create_function(
         FunctionName=function_name,
         PackageType="Image",
@@ -52,9 +56,17 @@ def main():
     )
 
     function_arn = response["FunctionArn"]
-    print(f"Lambda Function {function_name} Created Successfully!")
+    logging.info(f"Lambda Function {function_name} Created Successfully!")
     print(f"Function ARN: {function_arn}")
     set_key(".env", "\nFUNCTION_ARN", function_arn)
 
 if __name__ == "__main__":
+    script_name = os.path.splitext(os.path.basename(__file__))[0]
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)-18s %(name)-8s %(levelname)-8s %(message)s",
+        datefmt="%y-%m-%d %H:%M",
+        filename=os.path.join(LOGS_FOLDER, f"{script_name}.log"),
+        filemode="w",
+    )
     main()

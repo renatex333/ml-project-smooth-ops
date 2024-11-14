@@ -1,7 +1,10 @@
 import os
 import boto3
+import logging
 import botocore
 from dotenv import load_dotenv, set_key, unset_key
+
+LOGS_FOLDER = os.path.relpath("logs", os.getcwd())
 
 def main():
     load_dotenv()
@@ -18,14 +21,16 @@ def main():
     try:
         api_gateway_id = os.getenv("API_GATEWAY_ID")
         api_gateway_client.delete_api(ApiId=api_gateway_id)
-        print("API Gateway Deleted!")
+        logging.info("Existing API Gateway was Deleted!")
         unset_key(".env", "API_GATEWAY_ID")
         unset_key(".env", "API_GATEWAY_URL")
     except (api_gateway_client.exceptions.NotFoundException, botocore.exceptions.ParamValidationError):
-        print(f"No existing API Gateway found with ID '{api_gateway_id}'.")
+        logging.warning(f"No existing API Gateway found with ID '{api_gateway_id}'.")
 
     lambda_function_arn = os.getenv("FUNCTION_ARN")
     api_route = "/predict"
+    logging.info(f"Creating API Gateway: {api_gateway_name}")
+    logging.info(f"API Route: {api_route}")
     response = api_gateway_client.create_api(
         Name=api_gateway_name,
         ProtocolType="HTTP",
@@ -36,9 +41,18 @@ def main():
 
     api_id = response["ApiId"]
     api_endpoint = response["ApiEndpoint"] + api_route
+    logging.info(f"API Gateway {api_gateway_name} Created Successfully!")
     print("API Endpoint:", api_endpoint)
     set_key(".env", "\nAPI_GATEWAY_ID", api_id)
     set_key(".env", "\nAPI_GATEWAY_URL", api_endpoint)
 
 if __name__ == "__main__":
+    script_name = os.path.splitext(os.path.basename(__file__))[0]
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)-18s %(name)-8s %(levelname)-8s %(message)s",
+        datefmt="%y-%m-%d %H:%M",
+        filename=os.path.join(LOGS_FOLDER, f"{script_name}.log"),
+        filemode="w",
+    )
     main()

@@ -4,7 +4,10 @@ Module to create a repository in ECR
 
 import os
 import boto3
+import logging
 from dotenv import load_dotenv, set_key, unset_key
+
+LOGS_FOLDER = os.path.relpath("logs", os.getcwd())
 
 def main():
     load_dotenv()
@@ -20,13 +23,13 @@ def main():
 
     try:
         ecr_client.delete_repository(repositoryName=repository_name, force=True)
-        print("Existing Repository was Deleted!")
+        logging.info("Existing Repository was Deleted!")
         unset_key(".env", "REPOSITORY_URI")
         unset_key(".env", "REPOSITORY_ARN")
     except ecr_client.exceptions.RepositoryNotFoundException:
-        print("Repository does not exist.")
+        logging.warning("Repository not found")
 
-    print(f"Creating Repository: {repository_name}")
+    logging.info(f"Creating Repository: {repository_name}")
     response = ecr_client.create_repository(
         repositoryName=repository_name,
         imageScanningConfiguration={"scanOnPush": True},
@@ -35,10 +38,19 @@ def main():
 
     repository_uri = response["repository"]["repositoryUri"]
     repository_arn = response["repository"]["repositoryArn"]
+    logging.info(f"Repository {repository_name} Created Successfully!")
     print(f"Repository URI: {repository_uri}")
     print(f"Repository ARN: {repository_arn}")
     set_key(".env", "\nREPOSITORY_URI", repository_uri)
     set_key(".env", "\nREPOSITORY_ARN", repository_arn)
 
 if __name__ == "__main__":
+    script_name = os.path.splitext(os.path.basename(__file__))[0]
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)-18s %(name)-8s %(levelname)-8s %(message)s",
+        datefmt="%y-%m-%d %H:%M",
+        filename=os.path.join(LOGS_FOLDER, f"{script_name}.log"),
+        filemode="w",
+    )
     main()

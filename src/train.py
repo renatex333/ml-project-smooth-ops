@@ -1,11 +1,10 @@
 import os
 import mlflow
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
 from sklearn.linear_model import SGDClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -130,14 +129,13 @@ def main(run_name: str = "wine-quality-model", experiment_name: str = "wine-qual
 
 
 if __name__ == "__main__":
-
+    script_name = os.path.splitext(os.path.basename(__file__))[0]
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)-18s %(name)-8s %(levelname)-8s %(message)s",
         datefmt="%y-%m-%d %H:%M",
-        filename=os.path.join(LOGS_FOLDER, "train.log"),
-        filemode="a",
+        filename=os.path.join(LOGS_FOLDER, f"{script_name}.log"),
+        filemode="w",
     )
-
     main()
 
