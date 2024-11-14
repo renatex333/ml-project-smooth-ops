@@ -6,9 +6,9 @@
 
 - Renato Laffranchi Falcão
 
-Modelo - XXXXXX
+Model - The script chooses the model based on performance. The models supported are: Support Vector Classification (SVC), SGD Classifier, Random Forest Classifier.
 
-Deploy - XXXXXX
+Deploy - AWS lambda, Docker and API Gateway.
 
 Video link : XXXXXX
 
