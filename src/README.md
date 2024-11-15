@@ -26,6 +26,7 @@ pip install -r requirements.txt
 ### Configure your AWS CLI
 
 Having [AWS CLI installed](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html), configure your credentials on a profile:
+
 ```bash
 aws configure --profile mlops
 ```
@@ -33,16 +34,19 @@ aws configure --profile mlops
 To set it as deafult profile:
 
 Linux:
+
 ```bash
 export AWS_PROFILE=mlops
 ```
 
 Windows CMD:
+
 ```bash
 set AWS_PROFILE=mlops
 ```
 
 Windows PowerShell:
+
 ```bash
 env:AWS_PROFILE = "mlops"
 ```
@@ -50,6 +54,7 @@ env:AWS_PROFILE = "mlops"
 ### Create and Configure ECR repository
 
 To set up the project, let's build the Docker image from the `Dockerfile` with the `test` tag.
+
 ```bash
 docker build --platform linux/amd64 -t smooth-ops-project-image:test .
 ```
@@ -101,6 +106,36 @@ To create an API Gateway that exposes the Lambda function, run:
 python3 src/create_api.py
 ```
 
+### Separate data between training and prediction splits
+
+To separate data between training and prediction, run:
+
+```bash
+python3 src/separate_data.py
+```
+
+It is important to separate data so the user can learn patterns on one dataset while its performance is independently validated on unseen data. This ensures accurate evaluation and validation of model quality.
+
+### Train data
+
+To train the dataset, run:
+
+```bash
+python3 src/train.py
+```
+
+This script trains the data in the training split and, by using three different models, chooses the best one in regards to performance for further use.
+
+### Predict data
+
+To make predictions on top of the dataset, run:
+
+```bash
+python3 src/predict.py
+```
+
+After predictions are done, a Ground Truth Evaluation (GTE) is made. It involves comparing the predicted outputs of a model to the actual, known values (ground truth) in order to assess the model's accuracy and performance.
+
 #### Local Testing
 
 To test the function locally, use:
@@ -119,7 +154,7 @@ pytest --local
 
 The `--local` flag ensures that tests requiring local resources, such as environment variables, are executed.
 
-# References
+## References
 
 - [AWS Boto3 Documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
 - [AWS Lambda Documentation](https://docs.aws.amazon.com/lambda/)
