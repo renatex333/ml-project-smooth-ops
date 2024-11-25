@@ -1,0 +1,5 @@
+outs:
+- md5: c24e5db2872f6bc8d0fc06cc1f3aa8cb
+  size: 70110
+  hash: md5
+  path: winequality-train.csv

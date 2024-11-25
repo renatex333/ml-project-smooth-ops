@@ -1,0 +1,5 @@
+outs:
+- md5: ddcce7e38fec33adc93d7dc03322a758
+  size: 23521
+  hash: md5
+  path: winequality-predict.csv
