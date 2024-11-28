@@ -55,6 +55,16 @@ python3 src/predict.py
 
 After predictions are done, a Ground Truth Evaluation (GTE) is made. It involves comparing the predicted outputs of a model to the actual, known values (ground truth) in order to assess the model's accuracy and performance.
 
+### Check out the MLflow dashboard
+
+To check out the metrics and artifacts generated during training, run MLflow with:
+
+```bash
+mlflow ui -p 5005
+```
+
+And access the dashboard at [localhost:5005](localhost:5005).
+
 ## Deploy model in AWS
 
 ### Configure your AWS CLI
