@@ -25,12 +25,12 @@ def main():
         unset_key(".env", "API_GATEWAY_ID")
         unset_key(".env", "API_GATEWAY_URL")
     except (api_gateway_client.exceptions.NotFoundException, botocore.exceptions.ParamValidationError):
-        logging.warning(f"No existing API Gateway found with ID '{api_gateway_id}'.")
+        logging.warning("No existing API Gateway found with ID '%s'.", api_gateway_id)
 
     lambda_function_arn = os.getenv("FUNCTION_ARN")
     api_route = "/predict"
-    logging.info(f"Creating API Gateway: {api_gateway_name}")
-    logging.info(f"API Route: {api_route}")
+    logging.info("Creating API Gateway: %s", api_gateway_name)
+    logging.info("API Route: %s", api_route)
     response = api_gateway_client.create_api(
         Name=api_gateway_name,
         ProtocolType="HTTP",
@@ -41,7 +41,7 @@ def main():
 
     api_id = response["ApiId"]
     api_endpoint = response["ApiEndpoint"] + api_route
-    logging.info(f"API Gateway {api_gateway_name} Created Successfully!")
+    logging.info("API Gateway %s Created Successfully!", api_gateway_name)
     print("API Endpoint:", api_endpoint)
     set_key(".env", "\nAPI_GATEWAY_ID", api_id)
     set_key(".env", "\nAPI_GATEWAY_URL", api_endpoint)

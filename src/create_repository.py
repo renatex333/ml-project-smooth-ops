@@ -29,7 +29,7 @@ def main():
     except ecr_client.exceptions.RepositoryNotFoundException:
         logging.warning("Repository not found")
 
-    logging.info(f"Creating Repository: {repository_name}")
+    logging.info("Creating Repository: %s", repository_name)
     response = ecr_client.create_repository(
         repositoryName=repository_name,
         imageScanningConfiguration={"scanOnPush": True},
@@ -38,7 +38,7 @@ def main():
 
     repository_uri = response["repository"]["repositoryUri"]
     repository_arn = response["repository"]["repositoryArn"]
-    logging.info(f"Repository {repository_name} Created Successfully!")
+    logging.info("Repository %s Created Successfully!", repository_name)
     print(f"Repository URI: {repository_uri}")
     print(f"Repository ARN: {repository_arn}")
     set_key(".env", "\nREPOSITORY_URI", repository_uri)

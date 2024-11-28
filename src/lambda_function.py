@@ -14,8 +14,8 @@ def loader(object_name: str):
     try:
         with open(object_path, "rb") as file:
             return joblib.load(file)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"Invalid object name. The object at {object_path} does not exist.")
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"Invalid object name. The object at {object_path} does not exist.") from e
 
 def predict(event, context):
     """
@@ -30,7 +30,6 @@ def predict(event, context):
 
     try:
         body = json.loads(event["body"])
-        
         model = loader("model")
         scaler = loader("scaler")
 
@@ -45,13 +44,13 @@ def predict(event, context):
         }
     except (ValueError, FileNotFoundError) as e:
         return {
-            "message": f"Error loading the model",
+            "message": "Error loading the model",
             "error": f"{type(e).__name__}: {str(e)}",
             "prediction": "None"
         }
     except Exception as e:
         return {
-            "message": f"Invalid body in the request",
+            "message": "Invalid body in the request",
             "error": f"{type(e).__name__}: {str(e)}",
             "prediction": "None"
         }

@@ -41,7 +41,7 @@ def predict():
 
     file_path = os.path.join(DATA_FOLDER, "predictions.csv")
     comparison.to_csv(file_path, index=False)
-    logging.info(f"Comparison saved to '{file_path}'.")
+    logging.info("Comparison saved to '%s'.", file_path)
     evaluate(comparison, model.classes_)
 
 def evaluate(comparison: pd.DataFrame, model_classes: list):
@@ -51,20 +51,20 @@ def evaluate(comparison: pd.DataFrame, model_classes: list):
     recall = recall_score(comparison["Actual Quality"], comparison["Predicted Quality"], average="weighted", zero_division=0)
     f1 = f1_score(comparison["Actual Quality"], comparison["Predicted Quality"], average="weighted", zero_division=0)
 
-    logging.info(f"Ground Truth Evaluation - Accuracy: {accuracy}")
-    logging.info(f"Ground Truth Evaluation - Precision: {precision}")
-    logging.info(f"Ground Truth Evaluation - Recall: {recall}")
-    logging.info(f"Ground Truth Evaluation - F1 Score: {f1}")
+    logging.info("Ground Truth Evaluation - Accuracy: %f:.2f", accuracy)
+    logging.info("Ground Truth Evaluation - Precision: %f:.2f", precision)
+    logging.info("Ground Truth Evaluation - Recall: %f:.2f", recall)
+    logging.info("Ground Truth Evaluation - F1 Score: %f:.2f", f1)
     conf_mat = confusion_matrix(comparison["Actual Quality"], comparison["Predicted Quality"], labels=model_classes)
     conf_mat_disp = ConfusionMatrixDisplay(
         confusion_matrix=conf_mat, display_labels=model_classes
     )
     fig, ax = plt.subplots()
     conf_mat_disp.plot(ax=ax)
-    fig_name = f"confusion_matrix_ground_truth.png"
+    fig_name = "confusion_matrix_ground_truth.png"
     fig_path = os.path.join(IMAGES_FOLDER, fig_name)
     fig.savefig(fig_path)
-    logging.info(f"Confusion matrix saved to '{fig_path}'.")
+    logging.info("Confusion matrix saved to '%s'.", fig_path)
 
 if __name__ == "__main__":
     script_name = os.path.splitext(os.path.basename(__file__))[0]

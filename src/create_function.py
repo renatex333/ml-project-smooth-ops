@@ -36,7 +36,7 @@ def main():
     except lambda_client.exceptions.ResourceNotFoundException:
         logging.warning("Function does not exist.")
 
-    logging.info(f"Creating Lambda Function: {function_name}")
+    logging.info("Creating Lambda Function: %s", function_name)
     response = lambda_client.create_function(
         FunctionName=function_name,
         PackageType="Image",
@@ -56,7 +56,7 @@ def main():
     )
 
     function_arn = response["FunctionArn"]
-    logging.info(f"Lambda Function {function_name} Created Successfully!")
+    logging.info("Lambda Function %s Created Successfully!", function_name)
     print(f"Function ARN: {function_arn}")
     set_key(".env", "\nFUNCTION_ARN", function_arn)
 

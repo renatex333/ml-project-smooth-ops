@@ -27,26 +27,26 @@ LOGS_FOLDER = os.path.relpath("logs", os.getcwd())
 def train_model():
     data_path = os.path.join(DATA_FOLDER, "winequality-train.csv")
     data = load_data(data_path)
-    
+
     X = data.drop("quality", axis=1)
     y = data["quality"]
-    
+
     scaler = StandardScaler().fit(X)
     X_scaled = scaler.transform(X)
-    
+
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-    
+
     models = {
         "SVC": SVC(),
         "SGDClassifier": SGDClassifier(),
         "RandomForestClassifier": RandomForestClassifier()
     }
-    
+
     best_model = None
     best_score = 0
-    
+
     for i, (model_name, model) in enumerate(models.items()):
-        logging.info(f"Training {model_name}...")
+        logging.info("Training %s...", model_name)
         model.fit(X_train, y_train)
 
         # Infer signature (input and output schema)
@@ -71,7 +71,7 @@ def train_model():
         recall = recall_score(y_test, y_pred, average="weighted", zero_division=0)
         f1 = f1_score(y_test, y_pred, average="weighted", zero_division=0)
 
-        logging.info(f"{model_name} Accuracy: {accuracy}")
+        logging.info("%s Accuracy: %f:.2f", model_name, accuracy)
         if accuracy > best_score:
             best_model = model
             best_score = accuracy
@@ -98,8 +98,8 @@ def train_model():
     if best_model is not None:
         joblib.dump(best_model, model_file_path)
         joblib.dump(scaler, scaler_file_path)
-        logging.info(f"Best model ({type(best_model).__name__}) saved as '{model_file_path}'.")
-        logging.info(f"Scaler saved as '{scaler_file_path}'.")
+        logging.info("Best model (%s) saved as '%s'.", type(best_model).__name__, model_file_path)
+        logging.info("Scaler saved as '%s'.", scaler_file_path)
     
     # GridSearchCV for hyperparameter tuning
     # print(f"Hyperparameters of {type(best_model).__name__}: ", best_model.get_params())
