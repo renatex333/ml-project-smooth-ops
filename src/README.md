@@ -13,7 +13,7 @@ Inside this folder you will find the code pertaining to the implementation of th
 7. `separate_data.py`: Script to separate original database into a training/predict split.
 8. `train.py`: Training split for the Machine Learning process. Run this before `predict.py`.
 
-## How to Run the code correctly
+## How to use the scripts
 
 ### Installing Dependencies
 
@@ -22,6 +22,40 @@ To install the project dependencies, use the `requirements.txt` file:
 ```sh
 pip install -r requirements.txt
 ```
+
+## Train and Evaluate Models
+
+### Separate data between training and prediction splits
+
+To separate data between training and prediction, run:
+
+```bash
+python3 src/separate_data.py
+```
+
+It is important to separate data so the user can learn patterns on one dataset while its performance is independently validated on unseen data. This ensures accurate evaluation and validation of model quality.
+
+### Train data
+
+To train the dataset, run:
+
+```bash
+python3 src/train.py
+```
+
+This script trains the data in the training split and, by using three different models, chooses the best one in regards to performance for further use.
+
+### Predict data
+
+To make predictions on top of the dataset, run:
+
+```bash
+python3 src/predict.py
+```
+
+After predictions are done, a Ground Truth Evaluation (GTE) is made. It involves comparing the predicted outputs of a model to the actual, known values (ground truth) in order to assess the model's accuracy and performance.
+
+## Deploy model in AWS
 
 ### Configure your AWS CLI
 
@@ -105,36 +139,6 @@ To create an API Gateway that exposes the Lambda function, run:
 ```bash
 python3 src/create_api.py
 ```
-
-### Separate data between training and prediction splits
-
-To separate data between training and prediction, run:
-
-```bash
-python3 src/separate_data.py
-```
-
-It is important to separate data so the user can learn patterns on one dataset while its performance is independently validated on unseen data. This ensures accurate evaluation and validation of model quality.
-
-### Train data
-
-To train the dataset, run:
-
-```bash
-python3 src/train.py
-```
-
-This script trains the data in the training split and, by using three different models, chooses the best one in regards to performance for further use.
-
-### Predict data
-
-To make predictions on top of the dataset, run:
-
-```bash
-python3 src/predict.py
-```
-
-After predictions are done, a Ground Truth Evaluation (GTE) is made. It involves comparing the predicted outputs of a model to the actual, known values (ground truth) in order to assess the model's accuracy and performance.
 
 #### Local Testing
 
