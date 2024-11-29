@@ -10,7 +10,7 @@ Model - The script chooses the model based on performance. The models supported 
 
 Deploy - AWS lambda, Docker and API Gateway.
 
-Video link : XXXXXX
+Video link : [Apresentação - Projeto SmoothOps](https://drive.google.com/file/d/1HsoMt9YhTQODoTPB19fhINZeCnYZUEGH/view?usp=sharing)
 
 ## Reference
 
